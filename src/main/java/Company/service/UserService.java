@@ -8,6 +8,9 @@ import Company.dto.response.SimpleResponse;
 public interface UserService  {
     AuthResponse apply(ApplyRequest a);
     AuthResponse signIn(SignInRequest signInRequest);
+    SimpleResponse delete(Long id);
+
+
 
 //    SimpleResponse assign(Long restaurantId, Long employeeId);
 

@@ -22,7 +22,7 @@ public class ApplyRequest {
     private String firstName;
     @NotBlank
     private String lastName;
-    @NotBlank
+    @NotNull
     private LocalDate dateOfBirth;
     @Email
     private String email;

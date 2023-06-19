@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+
 public class Category {
     @Id
     @GeneratedValue(generator = "subCategory_gen", strategy = GenerationType.SEQUENCE)
@@ -27,4 +28,13 @@ public class Category {
             CascadeType.REMOVE
     })
     List<SubCategory> subCategoryList;
+
+    public Category(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Category(String name) {
+        this.name = name;
+    }
 }

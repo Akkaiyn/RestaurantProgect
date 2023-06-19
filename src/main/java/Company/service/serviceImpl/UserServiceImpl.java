@@ -4,16 +4,19 @@ import Company.config.JwtService;
 import Company.dto.request.ApplyRequest;
 import Company.dto.request.SignInRequest;
 import Company.dto.response.AuthResponse;
+import Company.dto.response.SimpleResponse;
+
 import Company.entity.User;
 import Company.enums.Role;
 import Company.exception.AlreadyExistException;
 import Company.exception.BadRequestException;
 import Company.exception.NotFoundException;
-import Company.repository.RestaurantRepository;
+
 import Company.repository.UserRepository;
 import Company.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,7 +28,6 @@ import java.time.*;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final RestaurantRepository restaurantRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
@@ -78,7 +80,6 @@ public class UserServiceImpl implements UserService {
                         .experience(a.getExperience())
                         .build();
 
-
                 userRepository.save(user);
                 String jwtToken = jwtService.generateToken(user);
                 return AuthResponse
@@ -93,6 +94,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // TODO  (Nothing to do, just notice for CHEF logic)********************************
+
         AuthResponse authResponse = new AuthResponse();
         if (a.getRole().equals(Role.CANDIDATE_CHEF)) {
             if (a.getExperience() < 2) {
@@ -152,5 +154,19 @@ public class UserServiceImpl implements UserService {
                 .role(user.getRole())
                 .build();
     }
+
+    @Override
+    public SimpleResponse delete(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() ->
+                new NotFoundException("User with id : " + id + " not found"));
+        userRepository.deleteById(id);
+        return SimpleResponse
+                .builder()
+                .httpStatus(HttpStatus.OK)
+                .message(String.format("User with id: %s successfully deleted.", id))
+                .build();
+    }
+
+
 }
 
