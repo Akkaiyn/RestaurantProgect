@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/menu")
 @RequiredArgsConstructor
@@ -17,8 +19,10 @@ public class MenuItemApi {
     private final MenuItemService menuItemService;
     @PreAuthorize("hasAnyAuthority('ADMIN', 'CHEF')")
     @GetMapping
-    public MenItemPagination allPag(@RequestParam int page, @RequestParam int size){
-        return menuItemService.getAllPag(page, size);
+    public MenItemPagination allPag(
+            @RequestParam int page, @RequestParam int size,
+            @RequestParam String ascOrDesc, @RequestParam boolean isVeg){
+        return menuItemService.getAllPag(page, size,isVeg , ascOrDesc );
     }
     @PreAuthorize("hasAnyAuthority('ADMIN', 'CHEF')")
     @PostMapping("/{rId}")
@@ -31,6 +35,24 @@ public class MenuItemApi {
         return menuItemService.getById(id);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'CHEF')")
+    @PutMapping("/{id}")
+    public MenuItemResponse update(@PathVariable Long id,
+                                   @RequestBody MenuItemRequest menuItemRequest){
+        return menuItemService.update(id, menuItemRequest);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'CHEF')")
+    @DeleteMapping("/{id}")
+    public SimpleResponse delete(@PathVariable Long id){
+        return menuItemService.delete(id);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'CHEF')")
+    @GetMapping("/search")
+    public List<MenuItemResponse> search(@RequestParam String letter){
+        return menuItemService.search(letter);
+    }
 
 
 

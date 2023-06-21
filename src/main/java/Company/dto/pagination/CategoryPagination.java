@@ -18,4 +18,5 @@ public class CategoryPagination {
    private int size;
    private int page;
 
+
 }
